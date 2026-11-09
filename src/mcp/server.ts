@@ -1,7 +1,10 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { packageVersion } from "../core/package-info.js";
+import { SearchIndex } from "../core/search.js";
 import { log } from "./logger.js";
+import { registerRead } from "./tools/read.js";
+import { registerSearch } from "./tools/search.js";
 
 /** Builds the MCP server for one vault. Tools are thin adapters over src/core. */
 export function createServer(vault: string): McpServer {
@@ -23,6 +26,9 @@ export function createServer(vault: string): McpServer {
       };
     },
   );
+
+  registerRead(server, vault);
+  registerSearch(server, new SearchIndex(vault));
 
   return server;
 }
