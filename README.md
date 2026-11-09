@@ -4,7 +4,7 @@
 >
 > Your notes, bug history and private specs, available to your coding agent in any repo, with a record of where each note came from.
 
-**Status: in design.** v0.1 is being built spec-first with [OpenSpec](https://github.com/Fission-AI/OpenSpec). Follow the plan in [`openspec/changes/`](openspec/changes/).
+**Status: in progress.** v0.1 is being built spec-first with [OpenSpec](https://github.com/Fission-AI/OpenSpec). Follow the plan in [`openspec/changes/`](openspec/changes/).
 
 ## Why
 
@@ -16,6 +16,7 @@ kb-hub keeps that knowledge in a plain markdown vault (the LLM Wiki pattern desc
 
 | Tool | What it does |
 | --- | --- |
+| `ping` | Confirms the agent is connected and shows which vault it sees |
 | `search` | Full-text search over the vault, wiki pages ranked above raw captures |
 | `read` | Reads a page with its frontmatter, never outside the vault |
 | `capture` | Saves a note to `raw/inbox/` stamped with repo, branch, commit and work item ID |
@@ -23,14 +24,27 @@ kb-hub keeps that knowledge in a plain markdown vault (the LLM Wiki pattern desc
 
 Plus `npx kb-hub init <dir>` to create a vault with an `AGENTS.md` that tells the agent how to use it.
 
-## Quickstart (planned)
+## Quickstart
+
+Not on npm yet. Until the v0.1.0 release, run it from source:
+
+```bash
+git clone https://github.com/jMautone/kb-hub && cd kb-hub && npm ci && npm run build
+node dist/cli.js init ~/my-vault
+claude mcp add kb -- node "$PWD/dist/cli.js" mcp --vault ~/my-vault
+```
+
+On Windows (PowerShell), use `$env:USERPROFILE\my-vault` instead of `~/my-vault`.
+
+Once published, it will be:
 
 ```bash
 npx kb-hub init ~/my-vault
 claude mcp add kb -- npx -y kb-hub mcp --vault ~/my-vault
 # Windows: claude mcp add kb -- cmd /c npx -y kb-hub mcp --vault %USERPROFILE%\my-vault
-# then, in any repo: "check the kb for anything about the checkout bug"
 ```
+
+Then ask the agent, in any repo, to `ping` kb-hub to confirm it sees your vault. To try it without your own notes, point `--vault` at [`examples/demo-vault`](examples/demo-vault), a made-up knowledge base for a fictional online store.
 
 ## How it works
 

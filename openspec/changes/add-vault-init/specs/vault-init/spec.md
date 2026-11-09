@@ -19,7 +19,7 @@ Lets a user create a knowledge vault with the standard kb-hub layout and the ins
 - **THEN** the layout is created inside it and the command exits with code 0
 
 ### Requirement: Init never overwrites content
-`kb-hub init` SHALL refuse to run on a folder that already contains files, unless every existing file is one the layout would create with identical content.
+`kb-hub init` SHALL refuse to run on a folder that already contains files. When the folder already is a vault, it SHALL change nothing and report that the vault exists.
 
 #### Scenario: Init on a non-empty folder
 - **WHEN** the user runs `kb-hub init ./notes` and `./notes` contains `todo.md`
@@ -27,8 +27,9 @@ Lets a user create a knowledge vault with the standard kb-hub layout and the ins
 - **AND** the command exits with a non-zero code and an error that names the folder and says it is not empty
 
 #### Scenario: Init run twice
-- **WHEN** the user runs `kb-hub init ./my-vault` on a vault that init just created and nobody edited
-- **THEN** the command exits with code 0 and reports that the vault already exists
+- **WHEN** the user runs `kb-hub init ./my-vault` on a folder that already is a vault
+- **THEN** no file is created or changed
+- **AND** the command exits with code 0 and reports that the vault already exists
 
 ### Requirement: Vault instructions for agents
 The created `AGENTS.md` SHALL describe the page types, the folders, when to search the vault, how to capture, and how to compile captures from `raw/inbox/` into `wiki/` pages that list their sources in a `sources` frontmatter field. `CLAUDE.md` SHALL contain only `@AGENTS.md`.

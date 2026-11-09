@@ -1,0 +1,26 @@
+name: CI
+
+# Manual only for now: GitHub Actions minutes are used up on this account.
+# Run `npm run check` locally before every PR. Re-enable push and pull_request
+# triggers before the v0.1.0 release.
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - run: npm test

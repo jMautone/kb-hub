@@ -12,7 +12,7 @@ All behavior changes go through OpenSpec. Do not write feature code without a ch
 
 1. Pick the next change in `openspec/changes/` (they are ordered: `add-vault-init` → `add-read-and-search` → `add-capture-and-status`), or propose one with `/opsx:propose`.
 2. Implement it with `/opsx:apply <change>`, ticking `tasks.md` as each task's verification passes.
-3. Run `npx @fission-ai/openspec validate <change> --strict` before opening the PR.
+3. Run `npm run check` and `npx @fission-ai/openspec validate <change> --strict` before opening the PR.
 4. After merge, archive it with `/opsx:archive <change>` so the main specs in `openspec/specs/` are updated.
 
 One change, one branch, one PR. Branch name: `change/<change-name>`.
@@ -25,6 +25,7 @@ One change, one branch, one PR. Branch name: `change/<change-name>`.
 | Build | `npm run build` |
 | Test | `npm test` |
 | Lint and types | `npm run lint` |
+| Everything before a PR | `npm run check` (CI is manual-only for now, so this is the gate) |
 | Run the MCP server against the example vault | `npm run dev -- mcp --vault examples/demo-vault` |
 | Inspect the server | `npx @modelcontextprotocol/inspector node dist/cli.js mcp --vault examples/demo-vault` |
 
