@@ -1,0 +1,20 @@
+schema: spec-driven
+
+context: |
+  kb-hub is a local knowledge hub for coding agents: a markdown vault that
+  follows the LLM Wiki pattern, served to agents through an MCP server (stdio).
+  It is published on npm and run with npx.
+  Stack: TypeScript on Node 22 (ESM), one npm package with src/core, src/mcp and src/cli.ts.
+  The core never depends on the MCP SDK; the MCP layer is a thin adapter over core.
+  Everything must work on Windows, macOS and Linux (paths, line endings, git calls).
+  The tool never calls an LLM: agents synthesize, kb-hub keeps the bookkeeping.
+  Fixtures and examples use invented data only (fictional online store "Mate & Co.").
+  Write all artifacts in English.
+
+rules:
+  proposal:
+    - State what is out of scope for v0.1
+  specs:
+    - Every tool input error must have a scenario describing the error returned to the agent
+  tasks:
+    - Each task group ends with passing `npm test` and `npm run lint`
