@@ -4,7 +4,7 @@
 
 - [x] 1.1 Create `package.json` (name `kb-hub`, `type: module`, `bin.kb-hub: dist/cli.js`, `engines.node >=22`, `files: [dist, templates]`, MIT) and verify `npm install` succeeds
 - [x] 1.2 Add `tsconfig.json` (strict, NodeNext), tsup config and scripts `build`, `dev`, `test`, `lint` (`tsc --noEmit`), and verify `npm run build` produces `dist/cli.js` with a shebang
-- [ ] 1.3 Add `.github/workflows/ci.yml` running lint, test and build on ubuntu, macos and windows with Node 22, and verify it passes on the PR
+- [x] 1.3 Add `.github/workflows/ci.yml` running lint, test and build on ubuntu, macos and windows with Node 22 (manual trigger only until Actions minutes are available), and add `npm run check` for the same checks locally; verify `npm run check` passes
 
 ## 2. Vault init
 
