@@ -1,5 +1,7 @@
 # kb-hub
 
+> Works on macOS and Windows (Linux too).
+>
 > Your notes, bug history and private specs, available to your coding agent in any repo, with a record of where each note came from.
 
 **Status: in design.** v0.1 is being built spec-first with [OpenSpec](https://github.com/Fission-AI/OpenSpec). Follow the plan in [`openspec/changes/`](openspec/changes/).
@@ -26,6 +28,7 @@ Plus `npx kb-hub init <dir>` to create a vault with an `AGENTS.md` that tells th
 ```bash
 npx kb-hub init ~/my-vault
 claude mcp add kb -- npx -y kb-hub mcp --vault ~/my-vault
+# Windows: claude mcp add kb -- cmd /c npx -y kb-hub mcp --vault %USERPROFILE%\my-vault
 # then, in any repo: "check the kb for anything about the checkout bug"
 ```
 

@@ -38,6 +38,17 @@ The created `AGENTS.md` SHALL describe the page types, the folders, when to sear
 - **THEN** `AGENTS.md` contains sections on folders, searching, capturing and compiling
 - **AND** `CLAUDE.md` content is exactly `@AGENTS.md` followed by a newline
 
+### Requirement: Init works the same on macOS and Windows
+Init SHALL accept native paths on each OS (including `C:\\Users\\...`, `%USERPROFILE%` already expanded by the shell, and paths with spaces) and SHALL write template files with LF line endings on every OS.
+
+#### Scenario: Windows path with spaces
+- **WHEN** on Windows the user runs `kb-hub init "C:\\Users\\Ana Perez\\my vault"`
+- **THEN** the vault is created in that folder and the command exits with code 0
+
+#### Scenario: Same files on both OSes
+- **WHEN** a vault is created on macOS and another on Windows
+- **THEN** both contain byte-identical template files
+
 ### Requirement: Log records vault creation
 Init SHALL write a first entry to `log.md` with the date and the text `init`.
 

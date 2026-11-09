@@ -19,6 +19,8 @@ Builds on `resolveInVault`, the page loader and the server from earlier changes.
 - **git through `execFile`** with `rev-parse --show-toplevel`, `rev-parse --abbrev-ref HEAD`, `rev-parse --short HEAD` and `remote get-url origin`, each with a 2-second timeout. Alternative: `simple-git`; rejected as one more dependency for four calls.
 - **Remote parsing** handles `https://host/owner/name(.git)`, `git@host:owner/name(.git)`, `https://dev.azure.com/org/project/_git/repo` and `org@vs-ssh.visualstudio.com:v3/org/project/repo`. Userinfo is dropped before parsing.
 - **Default work item pattern** `(?:^|/)(\d{2,})(?=[-_/]|$)`. Overridable with `KB_WORKITEM_PATTERN` for teams that use `AB#1234` or `PROJ-123` style names.
+- **git on Windows.** `execFile("git")` relies on Git for Windows being on PATH; if it is missing, provenance is `null` as the spec says. Paths returned by git use `/` and are normalized with `node:path` before comparing.
+- **File locking on Windows.** On Windows, `rename` over an open file can fail with `EPERM`; captures always target a new file name, so this does not apply, and the log uses append mode.
 - **Atomic writes.** Captures are written to a temp file in the same folder and renamed. Log entries use append mode.
 - **Status output** is a structured object plus a short markdown summary in the tool's text content, so the agent can show it as is.
 

@@ -19,6 +19,7 @@ Builds on the server and vault helpers from `add-vault-init`. Vaults are expecte
 - **Kind boost applied after scoring.** `wiki` and `project` results get their score multiplied by 1.5; `raw` stays at 1. Simple and testable against the ranking scenario.
 - **Freshness by mtime scan.** Before each search, list markdown files and compare `mtimeMs` and size with the indexed ones; re-index only the changed files and drop deleted ones. Avoids a file watcher (flaky across OSes and network drives). On 1,000 files a stat scan is a few milliseconds.
 - **Safe path resolution in core.** `resolveInVault(vault, rel)` rejects absolute paths, normalizes, checks the result starts with the vault root, then calls `realpath` and checks again to catch symlinks. Reused by `capture` later.
+- **CRLF tolerant parsing.** Pages edited on Windows may have CRLF endings; frontmatter, headings and wikilinks are parsed after normalizing to LF in memory, and files are never rewritten.
 - **Suggestions for missing pages** use Levenshtein distance on paths; no extra dependency.
 
 ## Risks / Trade-offs

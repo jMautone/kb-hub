@@ -21,7 +21,7 @@
 ## 4. Example vault and docs
 
 - [ ] 4.1 Create `examples/demo-vault/` for the fictional store "Mate & Co." as described in design.md, and verify `isVault` accepts it
-- [ ] 4.2 Update README "Quickstart" with the real commands and verify them by hand against the example vault with the MCP Inspector
+- [ ] 4.2 Update README "Quickstart" with the real commands for macOS and Windows (Windows needs `cmd /c npx` in `claude mcp add`) and verify them by hand on both OSes against the example vault
 
 ## Workflow follow-up
 

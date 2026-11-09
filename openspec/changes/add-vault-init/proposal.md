@@ -10,7 +10,7 @@ kb-hub needs two things before any tool is useful: a vault with a known layout t
 - `kb-hub init <dir>` creates a vault with the LLM Wiki layout and an `AGENTS.md` that tells agents how to use it.
 - `kb-hub mcp --vault <dir>` (or `KB_VAULT`) starts an MCP server over stdio that refuses to start on a folder that is not a vault.
 - An example vault with invented data in `examples/demo-vault/`, used by tests and the demo.
-- CI on Windows, macOS and Linux.
+- CI on Windows, macOS and Linux. macOS and Windows are the primary targets.
 
 Out of scope for v0.1: HTTP transport, several vaults at once, file watching, migrating an existing folder into a vault.
 

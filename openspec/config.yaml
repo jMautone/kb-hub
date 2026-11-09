@@ -6,7 +6,8 @@ context: |
   It is published on npm and run with npx.
   Stack: TypeScript on Node 22 (ESM), one npm package with src/core, src/mcp and src/cli.ts.
   The core never depends on the MCP SDK; the MCP layer is a thin adapter over core.
-  Everything must work on Windows, macOS and Linux (paths, line endings, git calls).
+  macOS and Windows are first-class targets (the author works on both); Linux is supported.
+  Everything must work the same on all three: paths, CRLF line endings, git calls, npx launch.
   The tool never calls an LLM: agents synthesize, kb-hub keeps the bookkeeping.
   Fixtures and examples use invented data only (fictional online store "Mate & Co.").
   Write all artifacts in English.
