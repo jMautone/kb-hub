@@ -22,6 +22,19 @@ kb-hub keeps that knowledge in a plain markdown vault (the LLM Wiki pattern desc
 | `capture` | Saves a note to `raw/inbox/` stamped with repo, branch, commit and work item ID |
 | `status` | Captures not yet compiled into the wiki, broken `[[wikilinks]]`, latest log entries |
 
+Example, against the [example vault](examples/demo-vault):
+
+```text
+search { "query": "coupon", "limit": 2 }
+
+1. Incident 2026-10: coupon applied twice (wiki/incident-2026-10-coupon-applied-twice.md, wiki)
+   Incident 2026-10: coupon applied twice What happened. On 21 October, customers who retried a failed payment got their coupon discount applied a second time…
+2. Coupon applied twice on retry (raw/inbox/2026-10-21-coupon-applied-twice-on-retry.md, raw)
+   Customers who retry a failed payment get the coupon discount twice…
+```
+
+The compiled wiki page comes first; the raw capture it was built from comes second. `read { "path": "wiki/incident-2026-10-coupon-applied-twice.md" }` then returns the page's frontmatter and body.
+
 Plus `npx kb-hub init <dir>` to create a vault with an `AGENTS.md` that tells the agent how to use it.
 
 ## Quickstart
