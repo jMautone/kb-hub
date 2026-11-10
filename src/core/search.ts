@@ -1,7 +1,7 @@
 import { stat, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import MiniSearch from "minisearch";
-import { kindOf, listMarkdown, PAGE_FOLDERS, parsePage, type PageKind } from "./pages.js";
+import { kindOf, listMarkdown, PAGE_FOLDERS, parsePage, type Page, type PageKind } from "./pages.js";
 
 export type SearchResult = {
   path: string;
@@ -59,6 +59,7 @@ export class SearchIndex {
     },
   });
   private readonly seen = new Map<string, string>();
+  private readonly parsed = new Map<string, Page>();
 
   constructor(private readonly vault: string) {}
 
@@ -73,6 +74,7 @@ export class SearchIndex {
       if (!current.has(id)) {
         this.mini.discard(id);
         this.seen.delete(id);
+        this.parsed.delete(id);
       }
     }
     for (const rel of paths) {
@@ -98,7 +100,13 @@ export class SearchIndex {
       if (this.seen.has(rel)) this.mini.discard(rel);
       this.mini.add(doc);
       this.seen.set(rel, signature);
+      this.parsed.set(rel, page);
     }
+  }
+
+  /** The parsed pages as of the last refresh, sorted by path. Lets status reuse the index instead of re-reading files. */
+  pages(): Page[] {
+    return [...this.parsed.values()].sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
   }
 
   async search(query: string, limit = 10): Promise<SearchResult[]> {

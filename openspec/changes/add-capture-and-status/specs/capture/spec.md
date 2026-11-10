@@ -22,8 +22,12 @@ The `capture` tool SHALL take a non-empty `text`, and optional `title` and `tags
 - **WHEN** the agent calls `capture` with empty or whitespace-only text
 - **THEN** the tool returns a validation error and no file is written
 
+#### Scenario: Working directory that does not exist
+- **WHEN** the agent calls `capture` with a `cwd` that is not an existing folder
+- **THEN** the tool returns an error naming `cwd` and no file is written
+
 ### Requirement: Capture records provenance
-The note's frontmatter SHALL include `title`, `tags`, `captured_at` (ISO 8601 with offset), and a `provenance` object with `repo`, `branch`, `commit` (short hash) and `work_item`, taken from the git repository at `cwd`, or at the server's working directory when `cwd` is not given.
+The note's frontmatter SHALL include `title`, `tags`, `captured_at` (ISO 8601 with offset), and a `provenance` object with `repo`, `branch`, `commit` (short hash) and `work_item`, taken from the git repository at `cwd`, or at the server's working directory when `cwd` is not given. A relative `cwd` SHALL be resolved against the server's working directory. The tool result SHALL say when no repository was found, so the agent can retry with `cwd`.
 
 #### Scenario: Capture inside a git repo
 - **WHEN** the agent captures from repo `mate-and-co/storefront` on branch `feature/4821-checkout` at commit `9f3c2ab`
@@ -45,7 +49,7 @@ The note's frontmatter SHALL include `title`, `tags`, `captured_at` (ISO 8601 wi
 - **THEN** `provenance.repo` is `contoso/Shop/storefront` and the note contains no `user@`
 
 ### Requirement: Work item from branch name
-The work item ID SHALL be the first run of two or more digits in the branch name that starts the name or follows a `/`, unless `KB_WORKITEM_PATTERN` is set, in which case its first capture group is used.
+The work item ID SHALL be the first run of two or more digits in the branch name that starts the name or follows a `/`, and is followed by `-`, `_`, `/` or the end of the name. When `KB_WORKITEM_PATTERN` is set, its first capture group SHALL be used instead, or the whole match when the pattern has no group.
 
 #### Scenario: Default pattern
 - **WHEN** the branch is `bugfix/77-null-cart`
@@ -54,6 +58,14 @@ The work item ID SHALL be the first run of two or more digits in the branch name
 #### Scenario: No ID in branch
 - **WHEN** the branch is `main`
 - **THEN** `work_item` is `null`
+
+#### Scenario: Custom pattern
+- **WHEN** `KB_WORKITEM_PATTERN` is `([A-Z]+-\d+)` and the branch is `PROJ-123-checkout`
+- **THEN** `work_item` is `"PROJ-123"`
+
+#### Scenario: Invalid custom pattern
+- **WHEN** the server starts with a `KB_WORKITEM_PATTERN` that is not a valid regular expression
+- **THEN** it exits with a non-zero code and stderr names `KB_WORKITEM_PATTERN`
 
 ### Requirement: Capture appends to the log
 Each capture SHALL append one entry to `log.md` of the form `## [YYYY-MM-DD] capture | <title>` followed by the new file's path, and SHALL never rewrite earlier entries.
