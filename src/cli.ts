@@ -1,5 +1,6 @@
 import { Command } from "commander";
 import { packageVersion } from "./core/package-info.js";
+import { compileWorkItemPattern, ConfigError } from "./core/provenance.js";
 import { initVault, resolveVaultPath, VaultError } from "./core/vault.js";
 import { startServer } from "./mcp/server.js";
 
@@ -20,8 +21,8 @@ program
     }
     const isWindows = process.platform === "win32";
     const add = isWindows
-      ? `claude mcp add kb -- cmd /c npx -y kb-hub mcp --vault "${result.path}"`
-      : `claude mcp add kb -- npx -y kb-hub mcp --vault "${result.path}"`;
+      ? `claude mcp add kb --scope user -- cmd /c npx -y kb-hub mcp --vault "${result.path}"`
+      : `claude mcp add kb --scope user -- npx -y kb-hub mcp --vault "${result.path}"`;
     console.log(`Created vault at ${result.path}\n\nNext, connect it to Claude Code:\n  ${add}`);
   });
 
@@ -31,11 +32,12 @@ program
   .option("--vault <dir>", "vault folder (defaults to the KB_VAULT environment variable)")
   .action(async (opts: { vault?: string }) => {
     const vault = resolveVaultPath(opts.vault, process.env.KB_VAULT);
-    await startServer(vault);
+    const workItemPattern = compileWorkItemPattern(process.env.KB_WORKITEM_PATTERN);
+    await startServer(vault, { provenance: { workItemPattern } });
   });
 
 program.parseAsync(process.argv).catch((err: unknown) => {
-  if (err instanceof VaultError) {
+  if (err instanceof VaultError || err instanceof ConfigError) {
     process.stderr.write(`kb-hub: ${err.message}\n`);
   } else {
     process.stderr.write(`kb-hub: unexpected error: ${err instanceof Error ? err.stack : String(err)}\n`);

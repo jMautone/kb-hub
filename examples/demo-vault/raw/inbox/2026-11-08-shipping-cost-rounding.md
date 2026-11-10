@@ -1,7 +1,7 @@
 ---
 title: Shipping cost rounding differs between cart and checkout
 tags: [shipping, bug]
-captured_at: 2026-11-08T18:03:44-03:00
+captured_at: "2026-11-08T18:03:44-03:00"
 provenance:
   repo: mate-and-co/storefront
   branch: bugfix/4821-shipping-rounding

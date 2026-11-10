@@ -18,7 +18,7 @@ The `status` tool SHALL list every markdown file in `raw/inbox/` that is not cit
 - **THEN** the pending list is empty
 
 ### Requirement: Status lists broken wikilinks
-The `status` tool SHALL list every `[[target]]` or `[[target|alias]]` link in `wiki/` and `projects/` whose target does not match the file name (without `.md`, case-insensitive) of any markdown page in the vault, with the page that contains it.
+The `status` tool SHALL list every `[[target]]` or `[[target|alias]]` link in `wiki/` and `projects/` whose target does not match the file name (without `.md`, case-insensitive) of any markdown page in the vault, with the page that contains it. Links inside code, heading anchors (`#...`) and embeds of non-markdown files SHALL not be reported.
 
 #### Scenario: Broken link
 - **WHEN** `wiki/checkout-flow.md` links to `[[refund-policy]]` and no `refund-policy.md` exists
@@ -28,12 +28,20 @@ The `status` tool SHALL list every `[[target]]` or `[[target|alias]]` link in `w
 - **WHEN** a page links to `[[payments-glossary|glossary]]` and `wiki/payments-glossary.md` exists
 - **THEN** the link is not reported
 
+#### Scenario: Link inside code
+- **WHEN** a page has `[[refund-policy]]` only inside a fenced code block or inline code
+- **THEN** the link is not reported
+
 ### Requirement: Status shows recent activity and totals
-The `status` tool SHALL return the last five entries of `log.md` and the page count per folder (`wiki`, `projects`, `raw`).
+The `status` tool SHALL return the last five entries of `log.md` and the page count per folder (`wiki`, `projects`, `raw`), together with a short markdown summary of the whole status that the agent can show as is.
 
 #### Scenario: Recent log
 - **WHEN** `log.md` has eight entries
 - **THEN** status returns the last five, newest first
+
+#### Scenario: Empty vault
+- **WHEN** the vault was just created and has no pages
+- **THEN** status returns empty lists, zero counts, the `init` log entry, and a summary that says nothing is pending
 
 ### Requirement: Status is cheap and deterministic
 The `status` tool SHALL not call any external service or model, and SHALL return the same result for the same vault content.

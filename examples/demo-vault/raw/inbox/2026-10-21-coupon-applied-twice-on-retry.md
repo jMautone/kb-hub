@@ -1,7 +1,7 @@
 ---
 title: Coupon applied twice on retry
 tags: [coupons, bug]
-captured_at: 2026-10-21T16:42:10-03:00
+captured_at: "2026-10-21T16:42:10-03:00"
 provenance:
   repo: mate-and-co/storefront
   branch: bugfix/4730-coupon-retry

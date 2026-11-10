@@ -1,7 +1,7 @@
 ---
 title: Checkout timeout in the payment sandbox
 tags: [checkout, payments]
-captured_at: 2026-11-03T10:15:00-03:00
+captured_at: "2026-11-03T10:15:00-03:00"
 provenance:
   repo: mate-and-co/storefront
   branch: feature/4790-payment-timeouts

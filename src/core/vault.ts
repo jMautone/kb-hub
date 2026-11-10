@@ -1,7 +1,8 @@
 import { existsSync, statSync } from "node:fs";
-import { appendFile, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { dirname, join, relative, resolve, sep } from "node:path";
+import { appendLog } from "./log.js";
 import { packageRoot } from "./package-info.js";
 
 /** Files and folders that make a folder a vault. */
@@ -97,12 +98,6 @@ export async function initVault(dirInput: string, now = new Date()): Promise<Ini
 
   await appendLog(dir, `## [${isoDate(now)}] init\n`);
   return { status: "created", path: dir };
-}
-
-/** Appends one entry to log.md, separated by a blank line. Never rewrites earlier entries. */
-export async function appendLog(vault: string, entry: string): Promise<void> {
-  const body = entry.endsWith("\n") ? entry : `${entry}\n`;
-  await appendFile(join(vault, "log.md"), `\n${body}`, "utf8");
 }
 
 /** Path relative to the vault, always with `/` separators. */
