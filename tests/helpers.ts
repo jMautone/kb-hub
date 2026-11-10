@@ -18,3 +18,21 @@ export async function copyDemoVault(): Promise<{ path: string; cleanup: () => Pr
   await cp(demoVault, path, { recursive: true });
   return { path, cleanup: dir.cleanup };
 }
+
+import { execFileSync } from "node:child_process";
+import { writeFileSync } from "node:fs";
+
+/** Creates a git repo with one commit on `branch`, and an optional origin remote. Returns the short hash. */
+export function makeGitRepo(dir: string, branch: string, origin?: string): string {
+  const git = (...args: string[]) =>
+    execFileSync("git", ["-c", "user.name=Test", "-c", "user.email=test@example.com", "-c", "commit.gpgsign=false", ...args], {
+      cwd: dir,
+      encoding: "utf8",
+    }).trim();
+  git("init", "-q", "-b", branch);
+  writeFileSync(`${dir}/README.md`, "# storefront\n");
+  git("add", "README.md");
+  git("commit", "-q", "-m", "init");
+  if (origin) git("remote", "add", "origin", origin);
+  return git("rev-parse", "--short", "HEAD");
+}

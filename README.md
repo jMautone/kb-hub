@@ -35,6 +35,27 @@ search { "query": "coupon", "limit": 2 }
 
 The compiled wiki page comes first; the raw capture it was built from comes second. `read { "path": "wiki/incident-2026-10-coupon-applied-twice.md" }` then returns the page's frontmatter and body.
 
+While working on branch `feature/4821-checkout`, the agent saves what it learned:
+
+```text
+capture { "title": "Expired coupon breaks checkout", "text": "Coupons past their end date throw instead of being ignored." }
+
+Captured "Expired coupon breaks checkout" to raw/inbox/2026-11-09-expired-coupon-breaks-checkout.md
+from mate-and-co/storefront on feature/4821-checkout at 9f3c2ab (work item 4821).
+```
+
+And `status` shows what still needs work, without spending a token:
+
+```text
+**Vault:** 3 wiki pages, 1 project pages, 3 raw captures.
+
+**Pending captures (1):**
+- raw/inbox/2026-11-08-shipping-cost-rounding.md: Shipping cost rounding differs between cart and checkout (2026-11-08)
+
+**Broken links (1):**
+- [[refund-policy]] in wiki/checkout-flow.md
+```
+
 Plus `npx kb-hub init <dir>` to create a vault with an `AGENTS.md` that tells the agent how to use it.
 
 ## Quickstart
@@ -61,6 +82,8 @@ Then ask the agent, in any repo, to `ping` kb-hub to confirm it sees your vault.
 
 ## How it works
 
+A demo recording script lives in [`demo/demo.tape`](demo/demo.tape) (render it with [VHS](https://github.com/charmbracelet/vhs)).
+
 ```mermaid
 flowchart LR
   A[Coding agent<br/>in any repo] -- MCP stdio --> S[kb-hub server]
@@ -68,6 +91,32 @@ flowchart LR
   C -- read / write --> V[(markdown vault)]
   C -- git rev-parse --> R[current repo]
 ```
+
+## Make the agent use it
+
+The vault's own `AGENTS.md` tells an agent how to search, capture and compile. To make Claude Code reach for the vault from **any** repo, add this to your user-level `~/.claude/CLAUDE.md` (Windows: `%USERPROFILE%\.claude\CLAUDE.md`):
+
+```markdown
+## Knowledge vault (kb-hub)
+- Before asking me for context about a bug, feature, work item or business term, `search` the kb vault and `read` the relevant pages.
+- When we find a root cause, make a decision, or I explain something not written anywhere, `capture` it in one short note.
+- Never capture secrets or credentials.
+```
+
+**Compiling** captures into wiki pages is the agent's job, not kb-hub's. Open a session in the vault folder (`cd ~/my-vault && claude`) and ask it to compile pending captures; it follows the vault's `AGENTS.md` and records each capture in the page's `sources`, which is how `status` knows it is done.
+
+## Provenance
+
+`capture` reads provenance with `git` from the folder the MCP server runs in. Claude Code starts stdio servers in the project folder, so in practice that is the repo you are working on. If your client starts it somewhere else, the agent can pass `cwd` with the repo path. Outside a repo, or without git installed, the note is still saved with empty provenance.
+
+| Field | Where it comes from |
+| --- | --- |
+| `repo` | The `origin` remote as `owner/name`, or `org/project/name` for Azure DevOps. Credentials in the URL are dropped. Without `origin`, the repo folder name. |
+| `branch` | Current branch, `null` in detached HEAD. |
+| `commit` | Short hash of `HEAD`. |
+| `work_item` | First number of 2+ digits that starts the branch name or follows a `/` (`feature/4821-checkout` → `4821`). Set `KB_WORKITEM_PATTERN` to a regex with one capture group for other conventions, e.g. `AB#(\d+)` or `(PROJ-\d+)`. |
+
+On Windows, provenance needs [Git for Windows](https://git-scm.com/download/win) on the `PATH`.
 
 ## Alternatives
 
