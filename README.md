@@ -6,7 +6,9 @@
 
 ![kb-hub demo: create a vault, capture a note from a repo, check status, search](demo/demo.gif)
 
-**Status: v0.1 is feature-complete and not on npm yet.** It was built spec-first with [OpenSpec](https://github.com/Fission-AI/OpenSpec): the behavior contract is in [`openspec/specs/`](openspec/specs/) and the history of each change in [`openspec/changes/archive/`](openspec/changes/archive/).
+[![npm](https://img.shields.io/npm/v/kb-hub)](https://www.npmjs.com/package/kb-hub) [![license: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+**Status: v0.1.0 is on npm.** It was built spec-first with [OpenSpec](https://github.com/Fission-AI/OpenSpec): the behavior contract is in [`openspec/specs/`](openspec/specs/) and the history of each change in [`openspec/changes/archive/`](openspec/changes/archive/).
 
 ## Why
 
@@ -88,23 +90,19 @@ Plus `npx kb-hub init <dir>` to create a vault with an `AGENTS.md` that tells th
 
 ## Quickstart
 
-Not on npm yet. Until the v0.1.0 release, run it from source:
-
-```bash
-git clone https://github.com/jMautone/kb-hub && cd kb-hub && npm ci && npm run build
-node dist/cli.js init ~/my-vault
-claude mcp add kb --scope user -- node "$PWD/dist/cli.js" mcp --vault ~/my-vault
-```
-
-On Windows (PowerShell), use `$env:USERPROFILE\my-vault` instead of `~/my-vault`. `--scope user` makes the server available in every project, not only the folder you ran the command in.
-
-Once published, it will be:
-
 ```bash
 npx kb-hub init ~/my-vault
 claude mcp add kb --scope user -- npx -y kb-hub mcp --vault ~/my-vault
-# Windows: claude mcp add kb --scope user -- cmd /c npx -y kb-hub mcp --vault %USERPROFILE%\my-vault
 ```
+
+On Windows:
+
+```powershell
+npx kb-hub init $env:USERPROFILE\my-vault
+claude mcp add kb --scope user -- cmd /c npx -y kb-hub mcp --vault $env:USERPROFILE\my-vault
+```
+
+`--scope user` makes the server available in every project, not only the folder you ran the command in. Requires Node 22 or later.
 
 Then ask the agent, in any repo, to `ping` kb-hub to confirm it sees your vault. To try it without your own notes, point `--vault` at [`examples/demo-vault`](examples/demo-vault), a made-up knowledge base for a fictional online store.
 
