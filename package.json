@@ -1,6 +1,6 @@
 {
   "name": "kb-hub",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A markdown knowledge vault for coding agents, served over MCP, with git provenance for every captured note.",
   "type": "module",
   "bin": {
