@@ -171,8 +171,10 @@ See [`AGENTS.md`](AGENTS.md) for how changes are made, and [`docs/decisions/`](d
 
 ## Roadmap
 
-- **v0.2:** serve specs that can't live in a shared repo from the vault (`kb link`), plus skills to ingest, query and review.
-- **v0.3:** terminal CLI (`kb add`, `kb push`), stale-page and drift checks, export to Azure DevOps Wiki.
+- **v0.2:** first, a CLI for the terminal, scripts and CI (`kb-hub status`, `kb-hub capture`) on the same core as the MCP server. Then specs served from the vault (`kb link`) and skills to ingest, query and review.
+- **Later:** stale-page and link checks, export to the Azure DevOps Wiki.
+
+Details and priorities in [`docs/backlog.md`](docs/backlog.md).
 
 ## License
 
